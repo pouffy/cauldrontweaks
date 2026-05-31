@@ -1,0 +1,7 @@
+{
+  "type": "cauldrontweaks:dye_item",
+  "drain_amount": 100,
+  "input": {
+    "tag": "minecraft:dyeable"
+  }
+}

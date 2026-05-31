@@ -1,0 +1,14 @@
+{
+  "type": "cauldrontweaks:empty_container",
+  "empty": {
+    "count": 1,
+    "id": "minecraft:bucket"
+  },
+  "filled": {
+    "item": "minecraft:milk_bucket"
+  },
+  "fluid": {
+    "amount": 1000,
+    "id": "minecraft:milk"
+  }
+}

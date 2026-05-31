@@ -1,0 +1,11 @@
+{
+  "type": "cauldrontweaks:drink_contents",
+  "cure": {
+    "cure": "milk"
+  },
+  "fluid": {
+    "amount": 100,
+    "fluid": "minecraft:milk"
+  },
+  "sound": "minecraft:entity.generic.drink"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "cauldrontweaks:fill_container",
+  "empty": {
+    "item": "minecraft:bucket"
+  },
+  "filled": {
+    "count": 1,
+    "id": "minecraft:powder_snow_bucket"
+  },
+  "fluid": {
+    "amount": 1000,
+    "fluid": "cauldrontweaks:powder_snow"
+  }
+}
