@@ -35,7 +35,7 @@ public record DyeItemInteraction(Ingredient input, int drainAmount) implements I
     @Override
     public ItemInteractionResult interact(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         DyedItemColor color = fluidStack.get(DataComponents.DYED_COLOR);
-        if (color != null && (cauldron.getTank().getFluidAmount() - drainAmount) >= 0 && !stack.isEmpty()) {
+        if (color != null && (cauldron.getTank().getFluidAmount() - drainAmount) >= 0 && input.test(stack)) {
             stack.set(DataComponents.DYED_COLOR, color);
             player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getEmptySound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
             cauldron.getTank().drain(drainAmount, IFluidHandler.FluidAction.EXECUTE);
