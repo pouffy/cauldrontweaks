@@ -5,6 +5,7 @@ import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
+import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -21,7 +22,7 @@ public class DrinkPotionInteraction implements ICauldronInteraction {
 
     @Override
     public CauldronInteractionType<?> getType() {
-        return CauldronTweaks.DRINK_POTION.get();
+        return CauldronInteractions.DRINK_POTION.get();
     }
 
     @Override

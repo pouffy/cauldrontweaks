@@ -6,6 +6,7 @@ import io.github.pouffy.cauldrontweaks.common.event.CauldronFluidEvent;
 import io.github.pouffy.cauldrontweaks.common.event.InsideCauldronEvent;
 import io.github.pouffy.cauldrontweaks.helpers.CauldronHelper;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.SmartFluidTank;
+import io.github.pouffy.cauldrontweaks.init.CauldronFluids;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -34,7 +35,7 @@ public class CauldronEvents {
             event.setFluid(new FluidStack(Fluids.LAVA, 1000));
         }
         if (state.is(Blocks.POWDER_SNOW_CAULDRON)) {
-            event.setFluid(new FluidStack(CauldronTweaks.POWDER_SNOW, 1000));
+            event.setFluid(new FluidStack(CauldronFluids.POWDER_SNOW, 1000));
         }
     }
 
@@ -47,7 +48,7 @@ public class CauldronEvents {
             entity.lavaHurt();
         }
 
-        if (event.getFluid().is(CauldronTweaks.POWDER_SNOW)) {
+        if (event.getFluid().is(CauldronFluids.POWDER_SNOW)) {
             if (level.isClientSide) {
                 RandomSource randomsource = level.getRandom();
                 boolean flag = entity.xOld != entity.getX() || entity.zOld != entity.getZ();

@@ -18,5 +18,6 @@ public class CauldronFluidTagsProvider extends FluidTagsProvider {
 
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(CauldronTweaks.DYEABLE_FLUID).add(Fluids.WATER, Fluids.FLOWING_WATER);
+        this.tag(CauldronTweaks.CLEARS_DYE).add(Fluids.WATER, Fluids.FLOWING_WATER);
     }
 }

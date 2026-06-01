@@ -1,0 +1,10 @@
+{
+  "type": "cauldrontweaks:clear_dye",
+  "fluid": {
+    "amount": 100,
+    "tag": "cauldrontweaks:clears_dye"
+  },
+  "input": {
+    "tag": "minecraft:dyeable"
+  }
+}

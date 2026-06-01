@@ -3,6 +3,7 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction;
 import com.mojang.serialization.Codec;
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
+import io.github.pouffy.cauldrontweaks.init.CauldronRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -12,7 +13,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public interface ICauldronInteraction {
 
-    Codec<ICauldronInteraction> CODEC = Codec.lazyInitialized(CauldronTweaks.CAULDRON_INTERACTION_TYPE_REGISTRY::byNameCodec).dispatch("type", ICauldronInteraction::getType, CauldronInteractionType::codec);
+    Codec<ICauldronInteraction> CODEC = Codec.lazyInitialized(CauldronRegistries.CAULDRON_INTERACTION_TYPE_REGISTRY::byNameCodec).dispatch("type", ICauldronInteraction::getType, CauldronInteractionType::codec);
 
     CauldronInteractionType<?> getType();
 

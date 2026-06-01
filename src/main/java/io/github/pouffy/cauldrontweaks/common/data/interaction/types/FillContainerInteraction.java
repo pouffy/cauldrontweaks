@@ -6,7 +6,9 @@ import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
+import io.github.pouffy.cauldrontweaks.helpers.CauldronHelper;
 import io.github.pouffy.cauldrontweaks.helpers.FluidHelper;
+import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -27,7 +29,7 @@ public record FillContainerInteraction(Ingredient empty, ItemStack filled, Sized
 
     @Override
     public CauldronInteractionType<?> getType() {
-        return CauldronTweaks.FILL_CONTAINER.get();
+        return CauldronInteractions.FILL_CONTAINER.get();
     }
 
     @Override
@@ -36,17 +38,11 @@ public record FillContainerInteraction(Ingredient empty, ItemStack filled, Sized
             int requiredAmountForItem = fluid.amount();
             if (fluidStack.isEmpty() || requiredAmountForItem == -1 || requiredAmountForItem > fluidStack.getAmount())
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            if (player.isCreative())
-                stack = stack.copy();
-            stack.shrink(1);
-            ItemStack out = filled.copy();
+            if (!CauldronHelper.handleItemConsume(player, hand, stack, filled, false)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             FluidStack copy = fluidStack.copy();
             copy.setAmount(requiredAmountForItem);
             cauldron.getTank().drain(copy, IFluidHandler.FluidAction.EXECUTE);
             player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getFillSound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
-            if (!player.isCreative())
-                player.getInventory()
-                        .placeItemBackInInventory(out);
             cauldron.notifyUpdate();
             return ItemInteractionResult.sidedSuccess(player.level().isClientSide);
         }

@@ -1,17 +1,19 @@
 package io.github.pouffy.cauldrontweaks.common.block;
 
-import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.event.CauldronTickEvent;
 import io.github.pouffy.cauldrontweaks.helpers.CauldronHelper;
 import io.github.pouffy.cauldrontweaks.helpers.FluidHelper;
 import io.github.pouffy.cauldrontweaks.helpers.LerpedFloat;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.BlockEntityBehaviour;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.SmartBlockEntity;
+import io.github.pouffy.cauldrontweaks.init.CauldronBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
@@ -40,9 +42,10 @@ public class CauldronBlockEntity extends SmartBlockEntity {
 
     // For rendering purposes only
     private LerpedFloat fluidLevel;
+    private int fluidDye;
 
     public CauldronBlockEntity(BlockPos pos, BlockState blockState) {
-        super(CauldronTweaks.CAULDRON.get(), pos, blockState);
+        super(CauldronBlockEntities.CAULDRON.get(), pos, blockState);
         tank = new CauldronTank(this::onFluidStackChanged, this);
         forceFluidLevelUpdate = true;
 
@@ -55,7 +58,7 @@ public class CauldronBlockEntity extends SmartBlockEntity {
     }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, CauldronTweaks.CAULDRON.get(), (be, context) -> {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, CauldronBlockEntities.CAULDRON.get(), (be, context) -> {
             if (be.tank == null) be.refreshCapability();
             return be.tank;
         });
@@ -163,6 +166,7 @@ public class CauldronBlockEntity extends SmartBlockEntity {
 
 
         if (tag.contains("LazySync")) fluidLevel.chase(fluidLevel.getChaseTarget(), 0.125f, LerpedFloat.Chaser.EXP);
+        if (tag.contains("DyeColor")) fluidDye = tag.getInt("DyeColor");
     }
 
     @Override
@@ -176,10 +180,15 @@ public class CauldronBlockEntity extends SmartBlockEntity {
         tag.put("CauldronContent", tank.writeToNBT(registries, new CompoundTag()));
         super.write(tag, registries, clientPacket);
 
+        DyedItemColor cachedColor = getFluidStack().has(DataComponents.DYED_COLOR) ? getFluidStack().get(DataComponents.DYED_COLOR) : null;
+
         if (!clientPacket) return;
 
         if (forceFluidLevelUpdate) tag.putBoolean("ForceFluidLevel", true);
         if (queuedSync) tag.putBoolean("LazySync", true);
+        if (cachedColor != null) {
+            tag.putInt("DyeColor", cachedColor.rgb());
+        } else tag.remove("DyeColor");
         forceFluidLevelUpdate = false;
     }
 
@@ -242,4 +251,5 @@ public class CauldronBlockEntity extends SmartBlockEntity {
     public int getLuminosity() {
         return getTank().getLuminosity();
     }
+
 }

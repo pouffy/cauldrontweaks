@@ -1,10 +1,10 @@
 package io.github.pouffy.cauldrontweaks.mixin;
 
-import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.event.InsideCauldronEvent;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.ISmartBlockEntity;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.SmartBlockEntity;
+import io.github.pouffy.cauldrontweaks.init.CauldronBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -38,7 +38,7 @@ public abstract class AbstractCauldronBlockMixin extends Block implements ISmart
     }
 
     public BlockEntityType<CauldronBlockEntity> getBlockEntityType() {
-        return CauldronTweaks.CAULDRON.get();
+        return CauldronBlockEntities.CAULDRON.get();
     }
 
     @Inject(method = "onRemove", at = @At("HEAD"))

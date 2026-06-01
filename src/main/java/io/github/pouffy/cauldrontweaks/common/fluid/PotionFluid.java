@@ -3,6 +3,8 @@ package io.github.pouffy.cauldrontweaks.common.fluid;
 import com.mojang.serialization.Codec;
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.helpers.PotionFluidHelper;
+import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
+import io.github.pouffy.cauldrontweaks.init.CauldronFluids;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.lang.Lang;
@@ -34,9 +36,9 @@ public class PotionFluid extends VirtualFluid {
 
     public static FluidStack of(int amount, PotionContents potionContents, BottleType bottleType) {
         FluidStack fluidStack;
-        fluidStack = new FluidStack(CauldronTweaks.POTION.get().getSource(), amount);
+        fluidStack = new FluidStack(CauldronFluids.POTION.get().getSource(), amount);
         addPotionToFluidStack(fluidStack, potionContents);
-        fluidStack.set(CauldronTweaks.POTION_FLUID_BOTTLE_TYPE, bottleType);
+        fluidStack.set(CauldronDataComponents.POTION_FLUID_BOTTLE_TYPE, bottleType);
         return fluidStack;
     }
 
@@ -74,7 +76,7 @@ public class PotionFluid extends VirtualFluid {
         @Override
         public String getDescriptionId(FluidStack stack) {
             PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-            ItemLike itemFromBottleType = PotionFluidHelper.itemFromBottleType(stack.getOrDefault(CauldronTweaks.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR));
+            ItemLike itemFromBottleType = PotionFluidHelper.itemFromBottleType(stack.getOrDefault(CauldronDataComponents.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR));
             return Potion.getName(contents.potion(), itemFromBottleType.asItem().getDescriptionId() + ".effect.");
         }
 

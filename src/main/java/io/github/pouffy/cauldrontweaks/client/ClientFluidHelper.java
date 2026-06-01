@@ -23,8 +23,7 @@ import java.awt.*;
 @SuppressWarnings("unchecked")
 public class ClientFluidHelper {
 
-    public static void renderFluidBox(FluidStack fluid, float xMin, float yMin, float zMin, float xMax, float yMax, float zMax,
-                                      VertexConsumer builder, PoseStack ms, int light, boolean renderBottom, boolean invertGasses) {
+    public static void renderFluidBox(FluidStack fluid, float xMin, float yMin, float zMin, float xMax, float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom, boolean invertGasses) {
         ModFluidHelper<FluidStack> helper = (ModFluidHelper<FluidStack>) CatnipServices.FLUID_HELPER;
 
         TextureAtlasSprite fluidTexture = helper.getStillTextureOrMissing(fluid);
@@ -47,18 +46,14 @@ public class ClientFluidHelper {
                 continue;
 
             boolean positive = side.getAxisDirection() == Direction.AxisDirection.POSITIVE;
-            if (side.getAxis()
-                    .isHorizontal()) {
+            if (side.getAxis().isHorizontal()) {
                 if (side.getAxis() == Direction.Axis.X) {
-                    FluidRenderHelper.renderStillTiledFace(side, zMin, yMin, zMax, yMax, positive ? xMax : xMin,
-                            builder, ms, light, color, fluidTexture);
+                    FluidRenderHelper.renderStillTiledFace(side, zMin, yMin, zMax, yMax, positive ? xMax : xMin, builder, ms, light, color, fluidTexture);
                 } else {
-                    FluidRenderHelper.renderStillTiledFace(side, xMin, yMin, xMax, yMax, positive ? zMax : zMin,
-                            builder, ms, light, color, fluidTexture);
+                    FluidRenderHelper.renderStillTiledFace(side, xMin, yMin, xMax, yMax, positive ? zMax : zMin, builder, ms, light, color, fluidTexture);
                 }
             } else {
-                FluidRenderHelper.renderStillTiledFace(side, xMin, zMin, xMax, zMax, positive ? yMax : yMin,
-                        builder, ms, light, color, fluidTexture);
+                FluidRenderHelper.renderStillTiledFace(side, xMin, zMin, xMax, zMax, positive ? yMax : yMin, builder, ms, light, color, fluidTexture);
             }
         }
 
@@ -68,11 +63,23 @@ public class ClientFluidHelper {
     public static int getColor(FluidStack stack, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos) {
         Fluid fluid = stack.getFluid();
         IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(fluid);
-        if (level == null || pos == null)
-            return extension.getTintColor(stack);
+        int dyeColor = 0x00000000;
+        if (stack.has(DataComponents.DYED_COLOR)) {
+            Color jColor = new Color(stack.get(DataComponents.DYED_COLOR).rgb(), false);
+            int r = jColor.getRed(), g = jColor.getGreen(), b = jColor.getBlue();
+            int alpha = 255;
+            dyeColor = new Color(r, g, b, alpha).getRGB();
+        }
+        if (level == null || pos == null) {
+            int color = extension.getTintColor(stack);
+            if (stack.has(DataComponents.DYED_COLOR)) {
+                color = dyeColor;
+            }
+            return color;
+        }
         int tintColor = extension.getTintColor(fluid.defaultFluidState(), level, pos);
         if (stack.has(DataComponents.DYED_COLOR)) {
-            tintColor = mix(new Color(tintColor), new Color(stack.get(DataComponents.DYED_COLOR).rgb() * 0xff000000), 0.5f).getRGB();
+            tintColor = dyeColor;
         }
         return tintColor;
     }

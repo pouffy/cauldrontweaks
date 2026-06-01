@@ -7,6 +7,7 @@ import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
+import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -37,12 +38,18 @@ public record DrinkContentsInteraction(SizedFluidIngredient fluid, Holder<SoundE
 
     @Override
     public CauldronInteractionType<?> getType() {
-        return CauldronTweaks.DRINK_CONTENTS.get();
+        return CauldronInteractions.DRINK_CONTENTS.get();
     }
 
     @Override
     public ItemInteractionResult interact(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
-        if (this.fluid.test(fluidStack) && stack.isEmpty()) {
+        boolean handTest;
+        if (hand == InteractionHand.OFF_HAND) {
+            handTest = player.isShiftKeyDown();
+        } else {
+            handTest = player.getItemInHand(hand).isEmpty();
+        }
+        if (this.fluid.test(fluidStack) && handTest) {
             foodProperties.ifPresent(props -> {
                 player.getFoodData().eat(props);
                 addEatEffect(player, props);

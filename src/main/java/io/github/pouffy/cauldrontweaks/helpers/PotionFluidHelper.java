@@ -3,6 +3,7 @@ package io.github.pouffy.cauldrontweaks.helpers;
 import com.mojang.datafixers.util.Pair;
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.fluid.PotionFluid;
+import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
@@ -44,7 +45,7 @@ public class PotionFluidHelper {
         if (potion.is(Potions.WATER) && potion.customEffects().isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
             return new FluidStack(Fluids.WATER, 250);
         FluidStack fluid = getFluidFromPotion(potion, bottleTypeFromItem, 250);
-        fluid.set(CauldronTweaks.POTION_FLUID_BOTTLE_TYPE, bottleTypeFromItem);
+        fluid.set(CauldronDataComponents.POTION_FLUID_BOTTLE_TYPE, bottleTypeFromItem);
         return fluid;
     }
 
@@ -75,7 +76,7 @@ public class PotionFluidHelper {
     }
 
     public static ItemStack fillBottle(ItemStack stack, FluidStack availableFluid) {
-        ItemStack potionStack = new ItemStack(itemFromBottleType(availableFluid.getOrDefault(CauldronTweaks.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR)));
+        ItemStack potionStack = new ItemStack(itemFromBottleType(availableFluid.getOrDefault(CauldronDataComponents.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR)));
         potionStack.set(DataComponents.POTION_CONTENTS, availableFluid.get(DataComponents.POTION_CONTENTS));
         return potionStack;
     }

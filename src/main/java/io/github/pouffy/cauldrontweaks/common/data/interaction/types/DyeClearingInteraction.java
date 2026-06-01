@@ -1,6 +1,5 @@
 package io.github.pouffy.cauldrontweaks.common.data.interaction.types;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
@@ -18,27 +17,30 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
-public record DyeItemInteraction(Ingredient input, int drainAmount) implements ICauldronInteraction {
+import java.util.Optional;
 
-    public static final MapCodec<DyeItemInteraction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC.fieldOf("input").forGetter(DyeItemInteraction::input),
-            Codec.INT.optionalFieldOf("drain_amount", 0).forGetter(DyeItemInteraction::drainAmount)
-    ).apply(instance, DyeItemInteraction::new));
-
+public record DyeClearingInteraction(Ingredient input, SizedFluidIngredient fluid, Optional<ItemStack> result) implements ICauldronInteraction {
+    public static final MapCodec<DyeClearingInteraction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Ingredient.CODEC.fieldOf("input").forGetter(DyeClearingInteraction::input),
+            SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(DyeClearingInteraction::fluid),
+            ItemStack.CODEC.optionalFieldOf("result").forGetter(DyeClearingInteraction::result)
+    ).apply(instance, DyeClearingInteraction::new));
 
     @Override
     public CauldronInteractionType<?> getType() {
-        return CauldronInteractions.DYE_ITEM.get();
+        return CauldronInteractions.CLEAR_DYE.get();
     }
 
     @Override
     public ItemInteractionResult interact(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         DyedItemColor color = fluidStack.get(DataComponents.DYED_COLOR);
-        if (color != null && (cauldron.getTank().getFluidAmount() - drainAmount) >= 0 && input.test(stack)) {
-            stack.set(DataComponents.DYED_COLOR, color);
+        if (color != null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (fluid().test(fluidStack) && input.test(stack) && (cauldron.getTank().getFluidAmount() - fluid().amount()) >= 0) {
+            stack.remove(DataComponents.DYED_COLOR);
             player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getEmptySound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
-            cauldron.getTank().drain(drainAmount, IFluidHandler.FluidAction.EXECUTE);
+            cauldron.getTank().drain(fluid().amount(), IFluidHandler.FluidAction.EXECUTE);
             return ItemInteractionResult.sidedSuccess(player.level().isClientSide());
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

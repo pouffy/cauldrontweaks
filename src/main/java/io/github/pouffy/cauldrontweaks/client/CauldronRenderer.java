@@ -3,13 +3,9 @@ package io.github.pouffy.cauldrontweaks.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.SafeBlockEntityRenderer;
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.createmod.catnip.render.PonderRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 
 public class CauldronRenderer extends SafeBlockEntityRenderer<CauldronBlockEntity> {
@@ -18,10 +14,10 @@ public class CauldronRenderer extends SafeBlockEntityRenderer<CauldronBlockEntit
 
     @Override
     protected void renderSafe(CauldronBlockEntity cauldron, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay) {
-        renderFluid(cauldron, partialTicks, matrixStack, buffer, light);
+        renderFluid(cauldron, partialTicks, matrixStack, buffer, light, overlay);
     }
 
-    public void renderFluid(CauldronBlockEntity cauldron, float pt, PoseStack ms, MultiBufferSource buffer, int light) {
+    public void renderFluid(CauldronBlockEntity cauldron, float pt, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         var fluidLevel = cauldron.getFluidLevel();
         if (fluidLevel == null) return;
         var tank = cauldron.getTank();

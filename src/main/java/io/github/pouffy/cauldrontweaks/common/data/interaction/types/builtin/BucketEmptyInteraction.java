@@ -8,6 +8,7 @@ import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteracti
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
 import io.github.pouffy.cauldrontweaks.helpers.FluidContainerHelper;
 import io.github.pouffy.cauldrontweaks.helpers.FluidHelper;
+import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -24,7 +25,7 @@ public class BucketEmptyInteraction implements ICauldronInteraction {
 
     @Override
     public CauldronInteractionType<?> getType() {
-        return CauldronTweaks.EMPTY_BUCKET.get();
+        return CauldronInteractions.EMPTY_BUCKET.get();
     }
 
     @Override
