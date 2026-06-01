@@ -3,6 +3,7 @@ package io.github.pouffy.cauldrontweaks.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.platform.services.ModFluidHelper;
@@ -10,7 +11,6 @@ import net.createmod.catnip.render.FluidRenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
@@ -64,21 +64,21 @@ public class ClientFluidHelper {
         Fluid fluid = stack.getFluid();
         IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(fluid);
         int dyeColor = 0x00000000;
-        if (stack.has(DataComponents.DYED_COLOR)) {
-            Color jColor = new Color(stack.get(DataComponents.DYED_COLOR).rgb(), false);
+        if (stack.has(CauldronDataComponents.DYED_COLOR)) {
+            Color jColor = new Color(stack.get(CauldronDataComponents.DYED_COLOR).rgb(), false);
             int r = jColor.getRed(), g = jColor.getGreen(), b = jColor.getBlue();
             int alpha = 255;
             dyeColor = new Color(r, g, b, alpha).getRGB();
         }
         if (level == null || pos == null) {
             int color = extension.getTintColor(stack);
-            if (stack.has(DataComponents.DYED_COLOR)) {
+            if (stack.has(CauldronDataComponents.DYED_COLOR)) {
                 color = dyeColor;
             }
             return color;
         }
         int tintColor = extension.getTintColor(fluid.defaultFluidState(), level, pos);
-        if (stack.has(DataComponents.DYED_COLOR)) {
+        if (stack.has(CauldronDataComponents.DYED_COLOR)) {
             tintColor = dyeColor;
         }
         return tintColor;

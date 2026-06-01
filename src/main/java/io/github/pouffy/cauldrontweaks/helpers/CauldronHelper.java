@@ -35,9 +35,9 @@ public class CauldronHelper {
             } else {
                 stack.shrink(1);
             }
+            if (newStack.isEmpty()) return true;
+            player.getInventory().placeItemBackInInventory(newStack);
         }
-        if (newStack.isEmpty()) return true;
-        player.getInventory().placeItemBackInInventory(newStack);
         return true;
     }
 }

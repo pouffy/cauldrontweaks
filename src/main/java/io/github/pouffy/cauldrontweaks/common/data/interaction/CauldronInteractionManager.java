@@ -6,12 +6,13 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.helpers.RegistryAccessJsonReloadListener;
-import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CauldronInteractionManager extends RegistryAccessJsonReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(); //json object that will write stuff
@@ -22,6 +23,10 @@ public class CauldronInteractionManager extends RegistryAccessJsonReloadListener
 
     public static List<ICauldronInteraction> getInteractions() {
         return INTERACTIONS.values().stream().toList();
+    }
+
+    public static Map<ResourceLocation, ICauldronInteraction> interactionsMap() {
+        return INTERACTIONS;
     }
 
     public CauldronInteractionManager() {

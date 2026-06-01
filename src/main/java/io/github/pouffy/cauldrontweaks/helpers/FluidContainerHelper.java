@@ -1,11 +1,10 @@
 package io.github.pouffy.cauldrontweaks.helpers;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.core.component.DataComponents;
+import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -60,7 +59,7 @@ public class FluidContainerHelper {
         return false;
     }
 
-    public static int getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
+    public static int getRequiredAmountForItem(ItemStack stack, FluidStack availableFluid) {
         if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid))
             return PotionFluidHelper.getRequiredAmountForFilledBottle(stack, availableFluid);
         if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
@@ -97,10 +96,10 @@ public class FluidContainerHelper {
         return false;
     }
 
-    public static ItemStack fillItem(Level world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
+    public static ItemStack fillItem(int requiredAmount, ItemStack stack, FluidStack availableFluid) {
         FluidStack toFill = availableFluid.copy();
         toFill.setAmount(requiredAmount);
-        toFill.remove(DataComponents.DYED_COLOR);
+        toFill.remove(CauldronDataComponents.DYED_COLOR);
         availableFluid.shrink(requiredAmount);
 
         if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {
@@ -126,7 +125,7 @@ public class FluidContainerHelper {
         return container;
     }
 
-    public static Pair<FluidStack, ItemStack> emptyItem(Level level, ItemStack stack, boolean simulate) {
+    public static Pair<FluidStack, ItemStack> emptyItem(ItemStack stack, boolean simulate) {
         FluidStack resultingFluid = FluidStack.EMPTY;
         ItemStack resultingItem = ItemStack.EMPTY;
 

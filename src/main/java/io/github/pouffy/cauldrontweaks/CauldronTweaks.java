@@ -2,11 +2,12 @@ package io.github.pouffy.cauldrontweaks;
 
 import com.mojang.logging.LogUtils;
 import io.github.pouffy.cauldrontweaks.common.events.InteractionEvents;
-import io.github.pouffy.cauldrontweaks.common.fluid.PotionFluid;
-import io.github.pouffy.cauldrontweaks.common.fluid.VirtualFluid;
 import io.github.pouffy.cauldrontweaks.datagen.CauldronDataGenerator;
 import io.github.pouffy.cauldrontweaks.helpers.RegistryAccessJsonReloadListener;
-import io.github.pouffy.cauldrontweaks.init.*;
+import io.github.pouffy.cauldrontweaks.init.CauldronBlockEntities;
+import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
+import io.github.pouffy.cauldrontweaks.init.CauldronFluids;
+import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -14,18 +15,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 
 @Mod(CauldronTweaks.MODID)

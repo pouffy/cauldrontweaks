@@ -2,7 +2,6 @@ package io.github.pouffy.cauldrontweaks.helpers;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
-import io.github.pouffy.cauldrontweaks.helpers.blockentity.SmartBlockEntity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
@@ -120,7 +119,7 @@ public class FluidHelper {
         if (!FluidContainerHelper.canItemBeEmptied(heldItem))
             return false;
 
-        Pair<FluidStack, ItemStack> emptyingResult = FluidContainerHelper.emptyItem(worldIn, heldItem, true);
+        Pair<FluidStack, ItemStack> emptyingResult = FluidContainerHelper.emptyItem(heldItem, true);
         IFluidHandler capability = worldIn.getCapability(Capabilities.FluidHandler.BLOCK, cauldron.getBlockPos(), null);
         FluidStack fluidStack = emptyingResult.getFirst();
 
@@ -130,7 +129,7 @@ public class FluidHelper {
             return true;
 
         ItemStack copyOfHeld = heldItem.copy();
-        emptyingResult = FluidContainerHelper.emptyItem(worldIn, copyOfHeld, false);
+        emptyingResult = FluidContainerHelper.emptyItem(copyOfHeld, false);
         cauldron.getTank().fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
 
         if (!player.isCreative()) {
@@ -158,7 +157,7 @@ public class FluidHelper {
         FluidStack fluid = cauldron.getFluidStack();
         if (fluid.isEmpty())
             return false;
-        int requiredAmountForItem = FluidContainerHelper.getRequiredAmountForItem(world, heldItem, fluid.copy());
+        int requiredAmountForItem = FluidContainerHelper.getRequiredAmountForItem(heldItem, fluid.copy());
         if (requiredAmountForItem == -1)
             return false;
         if (requiredAmountForItem > fluid.getAmount())
@@ -167,7 +166,7 @@ public class FluidHelper {
             return true;
         if (player.isCreative())
             heldItem = heldItem.copy();
-        ItemStack out = FluidContainerHelper.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
+        ItemStack out = FluidContainerHelper.fillItem(requiredAmountForItem, heldItem, fluid.copy());
         FluidStack copy = fluid.copy();
         copy.setAmount(requiredAmountForItem);
         cauldron.getTank().drain(copy, IFluidHandler.FluidAction.EXECUTE);

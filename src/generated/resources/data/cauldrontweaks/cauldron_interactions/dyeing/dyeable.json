@@ -1,6 +1,9 @@
 {
   "type": "cauldrontweaks:dye_item",
-  "drain_amount": 100,
+  "fluid": {
+    "amount": 100,
+    "tag": "cauldrontweaks:dyeable_fluid"
+  },
   "input": {
     "tag": "minecraft:dyeable"
   }

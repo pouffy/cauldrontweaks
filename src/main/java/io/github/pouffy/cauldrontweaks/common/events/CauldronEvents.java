@@ -1,7 +1,5 @@
 package io.github.pouffy.cauldrontweaks.common.events;
 
-import io.github.pouffy.cauldrontweaks.CauldronTweaks;
-import io.github.pouffy.cauldrontweaks.common.block.CauldronTank;
 import io.github.pouffy.cauldrontweaks.common.event.CauldronFluidEvent;
 import io.github.pouffy.cauldrontweaks.common.event.InsideCauldronEvent;
 import io.github.pouffy.cauldrontweaks.helpers.CauldronHelper;

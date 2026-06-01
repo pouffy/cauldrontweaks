@@ -2,29 +2,26 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction.types;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
+import io.github.pouffy.cauldrontweaks.common.data.CauldronFluidIngredient;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
-import io.github.pouffy.cauldrontweaks.helpers.CauldronHelper;
 import io.github.pouffy.cauldrontweaks.helpers.FluidHelper;
 import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import org.jetbrains.annotations.Nullable;
 
-public record FillContainerInteraction(Ingredient empty, ItemStack filled, SizedFluidIngredient fluid) implements ICauldronInteraction {
+public record FillContainerInteraction(Ingredient empty, ItemStack filled, CauldronFluidIngredient fluid) implements ICauldronInteraction {
 
     public static final MapCodec<FillContainerInteraction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC.fieldOf("empty").forGetter(FillContainerInteraction::empty),
             ItemStack.CODEC.fieldOf("filled").forGetter(FillContainerInteraction::filled),
-            SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(FillContainerInteraction::fluid)
+            CauldronFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(FillContainerInteraction::fluid)
     ).apply(instance, FillContainerInteraction::new));
 
     @Override
@@ -33,19 +30,39 @@ public record FillContainerInteraction(Ingredient empty, ItemStack filled, Sized
     }
 
     @Override
-    public ItemInteractionResult interact(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
-        if (empty.test(stack) && fluid.test(fluidStack)) {
-            int requiredAmountForItem = fluid.amount();
-            if (fluidStack.isEmpty() || requiredAmountForItem == -1 || requiredAmountForItem > fluidStack.getAmount())
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            if (!CauldronHelper.handleItemConsume(player, hand, stack, filled, false)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            FluidStack copy = fluidStack.copy();
-            copy.setAmount(requiredAmountForItem);
-            cauldron.getTank().drain(copy, IFluidHandler.FluidAction.EXECUTE);
-            player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getFillSound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
-            cauldron.notifyUpdate();
-            return ItemInteractionResult.sidedSuccess(player.level().isClientSide);
-        }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    public void runExtra(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
+        player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getFillSound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
+        cauldron.notifyUpdate();
+    }
+
+    @Override
+    public boolean testExtra(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
+        int requiredAmountForItem = fluid.amount();
+        return !(fluidStack.isEmpty() || requiredAmountForItem == -1 || requiredAmountForItem > fluidStack.getAmount());
+    }
+
+    @Override
+    public ItemStack getItemResult(ItemStack usedItem, FluidStack usedFluid, Player player) {
+        return this.filled();
+    }
+
+    @Override
+    public FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
+        return usedFluid;
+    }
+
+    @Override
+    public @Nullable Ingredient getItemInput() {
+        return this.empty();
+    }
+
+    @Override
+    public @Nullable CauldronFluidIngredient getFluidInput() {
+        return this.fluid();
+    }
+
+    @Override
+    public int fluidAmountChange() {
+        return -this.fluid().amount();
     }
 }

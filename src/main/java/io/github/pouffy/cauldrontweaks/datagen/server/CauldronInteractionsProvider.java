@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.datagen.server;
 
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
+import io.github.pouffy.cauldrontweaks.common.data.CauldronFluidIngredient;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CIOutput;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.types.*;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.types.builtin.BucketEmptyInteraction;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -51,13 +51,13 @@ public class CauldronInteractionsProvider extends AbstractCauldronInteractionPro
     }
 
     private void itemDyeing(CIOutput output) {
-        this.save(output, new DyeItemInteraction(Ingredient.of(ItemTags.DYEABLE), 100), CauldronTweaks.getResource("dyeing/dyeable"));
-        this.save(output, new DyeClearingInteraction(Ingredient.of(ItemTags.DYEABLE), SizedFluidIngredient.of(CauldronTweaks.CLEARS_DYE, 100), Optional.empty()), CauldronTweaks.getResource("undyeing/dyeable"));
+        this.save(output, new DyeItemInteraction(Ingredient.of(ItemTags.DYEABLE), CauldronFluidIngredient.of(CauldronTweaks.DYEABLE_FLUID, 100), Optional.empty()), CauldronTweaks.getResource("dyeing/dyeable"));
+        this.save(output, new DyeClearingInteraction(Ingredient.of(ItemTags.DYEABLE), CauldronFluidIngredient.of(CauldronTweaks.CLEARS_DYE, 100), Optional.empty()), CauldronTweaks.getResource("undyeing/dyeable"));
     }
 
     private void itemFilling(CIOutput output) {
-        this.save(output, new FillContainerInteraction(Ingredient.of(Items.BUCKET), Items.MILK_BUCKET.getDefaultInstance(), SizedFluidIngredient.of(new FluidStack(NeoForgeMod.MILK, 1000))), CauldronTweaks.getResource("filling/milk_bucket"));
-        this.save(output, new FillContainerInteraction(Ingredient.of(Items.BUCKET), Items.POWDER_SNOW_BUCKET.getDefaultInstance(), SizedFluidIngredient.of(new FluidStack(CauldronFluids.POWDER_SNOW, 1000))), CauldronTweaks.getResource("filling/powder_snow_bucket"));
+        this.save(output, new FillContainerInteraction(Ingredient.of(Items.BUCKET), Items.MILK_BUCKET.getDefaultInstance(), CauldronFluidIngredient.of(new FluidStack(NeoForgeMod.MILK, 1000))), CauldronTweaks.getResource("filling/milk_bucket"));
+        this.save(output, new FillContainerInteraction(Ingredient.of(Items.BUCKET), Items.POWDER_SNOW_BUCKET.getDefaultInstance(), CauldronFluidIngredient.of(new FluidStack(CauldronFluids.POWDER_SNOW, 1000))), CauldronTweaks.getResource("filling/powder_snow_bucket"));
     }
 
     private void itemEmptying(CIOutput output) {
@@ -68,7 +68,7 @@ public class CauldronInteractionsProvider extends AbstractCauldronInteractionPro
     private void contentsDrinking(CIOutput output, HolderLookup.Provider holderLookup) {
         HolderGetter<SoundEvent> sounds = holderLookup.asGetterLookup().lookupOrThrow(Registries.SOUND_EVENT);
         Holder.Reference<SoundEvent> milkDrink = sounds.getOrThrow(ResourceKey.create(Registries.SOUND_EVENT, SoundEvents.GENERIC_DRINK.getLocation()));
-        this.save(output, new DrinkContentsInteraction(SizedFluidIngredient.of(new FluidStack(NeoForgeMod.MILK, 100)), milkDrink, Optional.empty(), Optional.of(new DrinkContentsInteraction.CureProperties(EffectCures.MILK, 1, 1))), CauldronTweaks.getResource("drink_contents/milk"));
+        this.save(output, new DrinkContentsInteraction(CauldronFluidIngredient.of(new FluidStack(NeoForgeMod.MILK, 100)), milkDrink, Optional.empty(), Optional.of(new DrinkContentsInteraction.CureProperties(EffectCures.MILK, 1, 1))), CauldronTweaks.getResource("drink_contents/milk"));
 
     }
 }

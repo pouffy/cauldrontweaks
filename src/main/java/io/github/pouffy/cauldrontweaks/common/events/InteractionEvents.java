@@ -1,5 +1,6 @@
 package io.github.pouffy.cauldrontweaks.common.events;
 
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionManager;
 import net.minecraft.world.ItemInteractionResult;
@@ -21,9 +22,10 @@ public class InteractionEvents {
         Player player = event.getPlayer();
         BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getPos());
         if (blockEntity instanceof CauldronBlockEntity cauldron) {
-            for (var interaction : CauldronInteractionManager.getInteractions()) {
-                ItemInteractionResult result = interaction.interact(cauldron, cauldron.getFluidStack(), player, event.getHand(), event.getItemStack());
+            for (var entry : CauldronInteractionManager.interactionsMap().entrySet()) {
+                ItemInteractionResult result = entry.getValue().interact(cauldron, cauldron.getFluidStack(), player, event.getHand(), event.getItemStack());
                 if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+                    CauldronTweaks.LOGGER.info("Interaction success for: {}", entry.getKey());
                     event.cancelWithResult(result); break;
                 }
             }

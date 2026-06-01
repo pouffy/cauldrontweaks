@@ -1,26 +1,29 @@
 package io.github.pouffy.cauldrontweaks.helpers;
 
 import com.mojang.datafixers.util.Pair;
-import io.github.pouffy.cauldrontweaks.CauldronTweaks;
+import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.fluid.PotionFluid;
 import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.github.pouffy.cauldrontweaks.common.fluid.PotionFluid.BottleType;
 
@@ -81,14 +84,23 @@ public class PotionFluidHelper {
         return potionStack;
     }
 
-    public static void generatePotionParticles(Level level, BlockPos pos, int color, boolean generateMultiple) {
+    public static void generatePotionParticles(CauldronBlockEntity cauldron, BlockPos pos, PotionContents contents, boolean generateMultiple) {
         ParticleStatus particleStatus = Minecraft.getInstance().options.particles().get();
         if (particleStatus == ParticleStatus.MINIMAL)
             return;
 
-        BlockState stateOfBlockAbove = level.getBlockState(pos.above());
+        BlockState stateOfBlockAbove = cauldron.getLevel().getBlockState(pos.above());
         if (stateOfBlockAbove.canOcclude())
             return;
+
+        var fluidLevel = cauldron.getFluidLevel();
+        if (fluidLevel == null) return;
+        float capHeight = 1 / 16f;
+        float minPuddleHeight = 4 / 16f;
+        float totalHeight = 1 - 2 * capHeight - minPuddleHeight;
+        float level = fluidLevel.getValue(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false)) + 0.0225f / 16f;
+        if (level < 1 / (512f * totalHeight)) return;
+        float clampedLevel = Mth.clamp(level * totalHeight, 0, totalHeight);
 
         RandomSource random = RandomSource.create();
         int multiplier, numberOfParticles = 1;
@@ -104,23 +116,19 @@ public class PotionFluidHelper {
                 return;
         }
 
-        float red = (color >> 16 & 255) / 255.0f;
-        float green = (color >> 8 & 255) / 255.0f;
-        float blue = (color & 255) / 255.0f;
-
+        List<MobEffectInstance> effects = new ArrayList<>();
+        contents.getAllEffects().forEach(effects::add);
         for (int i = 1; i <= numberOfParticles; i++) {
-            Particle particle = Minecraft.getInstance().particleEngine.createParticle(
-                    ParticleTypes.EFFECT,
+            ParticleOptions options = effects.get(cauldron.getLevel().random.nextInt(effects.size())).getParticleOptions();
+            Minecraft.getInstance().particleEngine.createParticle(
+                    options,
                     pos.getX() + 0.45 + random.nextDouble() * 0.2,
-                    pos.getY() + 1.0,
+                    pos.getY() + clampedLevel,
                     pos.getZ() + 0.45 + random.nextDouble() * 0.2,
                     0.7,
                     1.3,
                     0.7
             );
-
-            assert particle != null;
-            particle.setColor(red, green, blue);
         }
     }
 }
