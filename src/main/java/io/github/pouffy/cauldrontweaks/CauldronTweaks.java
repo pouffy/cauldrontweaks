@@ -4,10 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.pouffy.cauldrontweaks.common.events.InteractionEvents;
 import io.github.pouffy.cauldrontweaks.datagen.CauldronDataGenerator;
 import io.github.pouffy.cauldrontweaks.helpers.RegistryAccessJsonReloadListener;
-import io.github.pouffy.cauldrontweaks.init.CauldronBlockEntities;
-import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
-import io.github.pouffy.cauldrontweaks.init.CauldronFluids;
-import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
+import io.github.pouffy.cauldrontweaks.init.*;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -46,6 +43,8 @@ public class CauldronTweaks {
         CauldronInteractions.staticInit();
         CauldronDataComponents.staticInit();
         CauldronFluids.staticInit();
+        CauldronFluidResults.staticInit();
+        CauldronItemResults.staticInit();
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             CauldronTweaksClient.init();

@@ -3,6 +3,8 @@ package io.github.pouffy.cauldrontweaks.init;
 import com.mojang.serialization.Lifecycle;
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
+import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResultType;
+import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResultType;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -16,6 +18,10 @@ public class CauldronRegistries {
 
     public static final ResourceKey<Registry<CauldronInteractionType<?>>> CAULDRON_INTERACTION_TYPE = createRegistryKey("cauldron_interaction_types");
     public static final Registry<CauldronInteractionType<?>> CAULDRON_INTERACTION_TYPE_REGISTRY = makeSyncedRegistry(CAULDRON_INTERACTION_TYPE);
+    public static final ResourceKey<Registry<CauldronFluidResultType<?>>> CAULDRON_FLUID_RESULT_TYPE = createRegistryKey("cauldron_fluid_result_types");
+    public static final Registry<CauldronFluidResultType<?>> CAULDRON_FLUID_RESULT_TYPE_REGISTRY = makeSyncedRegistry(CAULDRON_FLUID_RESULT_TYPE);
+    public static final ResourceKey<Registry<CauldronItemResultType<?>>> CAULDRON_ITEM_RESULT_TYPE = createRegistryKey("cauldron_item_result_types");
+    public static final Registry<CauldronItemResultType<?>> CAULDRON_ITEM_RESULT_TYPE_REGISTRY = makeSyncedRegistry(CAULDRON_ITEM_RESULT_TYPE);
 
     private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
         return ResourceKey.createRegistryKey(CauldronTweaks.getResource(name));
@@ -44,5 +50,7 @@ public class CauldronRegistries {
     @SubscribeEvent
     public static void newRegistry(NewRegistryEvent event) {
         event.register(CAULDRON_INTERACTION_TYPE_REGISTRY);
+        event.register(CAULDRON_FLUID_RESULT_TYPE_REGISTRY);
+        event.register(CAULDRON_ITEM_RESULT_TYPE_REGISTRY);
     }
 }
