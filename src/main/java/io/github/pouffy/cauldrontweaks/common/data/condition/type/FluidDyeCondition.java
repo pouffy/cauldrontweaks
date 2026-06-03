@@ -7,6 +7,7 @@ import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronConditionType;
 import io.github.pouffy.cauldrontweaks.init.CauldronConditions;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -30,7 +31,7 @@ public record FluidDyeCondition(DyeColor color) implements CauldronCondition {
         FluidStack contained = cauldron.getFluidStack();
         if (contained.has(DataComponents.DYED_COLOR)) {
             DyedItemColor color = contained.get(DataComponents.DYED_COLOR);
-            return color != null && this.color.getTextureDiffuseColor() == color.rgb();
+            return color != null && this.color.getTextureDiffuseColor() == FastColor.ARGB32.opaque(color.rgb());
         }
         return false;
     }
