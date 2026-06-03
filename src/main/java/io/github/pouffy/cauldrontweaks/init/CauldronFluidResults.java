@@ -4,10 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResultType;
-import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.AddComponentsFluidResult;
-import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.DrainFluidResult;
-import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.FillFluidResult;
-import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.RemoveComponentsFluidResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.*;
 import io.github.pouffy.cauldrontweaks.helpers.ModUtils;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -15,6 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class CauldronFluidResults {
     public static final DeferredRegister<CauldronFluidResultType<?>> HELPER = ModUtils.createRegister(CauldronRegistries.CAULDRON_FLUID_RESULT_TYPE);
 
+    public static final DeferredHolder<CauldronFluidResultType<?>, CauldronFluidResultType<NoOpFluidResult>> NO_OP = create("no_op", NoOpFluidResult.CODEC);
     public static final DeferredHolder<CauldronFluidResultType<?>, CauldronFluidResultType<DrainFluidResult>> DRAIN = create("drain", DrainFluidResult.CODEC);
     public static final DeferredHolder<CauldronFluidResultType<?>, CauldronFluidResultType<FillFluidResult>> FILL = create("fill", FillFluidResult.CODEC);
     public static final DeferredHolder<CauldronFluidResultType<?>, CauldronFluidResultType<AddComponentsFluidResult>> ADD_COMPONENTS = create("add_components", AddComponentsFluidResult.CODEC);

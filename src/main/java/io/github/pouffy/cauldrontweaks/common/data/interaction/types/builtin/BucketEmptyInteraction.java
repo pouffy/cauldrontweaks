@@ -3,9 +3,15 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction.types.builtin;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
-import io.github.pouffy.cauldrontweaks.common.data.CauldronFluidIngredient;
+import io.github.pouffy.cauldrontweaks.common.data.condition.type.builtin.CanBeEmptiedCondition;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
+import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.FillFluidResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.NoOpFluidResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.item.type.NoOpItemResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.item.type.TransmuteItemResult;
 import io.github.pouffy.cauldrontweaks.helpers.FluidContainerHelper;
 import io.github.pouffy.cauldrontweaks.helpers.FluidHelper;
 import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
@@ -13,9 +19,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BucketEmptyInteraction implements ICauldronInteraction {
 
@@ -29,54 +35,33 @@ public class BucketEmptyInteraction implements ICauldronInteraction {
     }
 
     @Override
-    public void runExtra(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
-        player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getEmptySound(getFluidResult(stack, fluidStack)), SoundSource.BLOCKS, 1.0F, 1.0F);
+    public boolean test(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
+        Pair<FluidStack, ItemStack> emptyingResult = FluidContainerHelper.emptyItem(stack, true);
+        return CanBeEmptiedCondition.INSTANCE.isValid(cauldron, player, hand, stack) && cauldron.canAccept(emptyingResult.getFirst());
     }
 
     @Override
-    public boolean testExtra(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
-        return FluidContainerHelper.canItemBeEmptied(stack) && cauldron.canAccept(getFluidResult(stack, fluidStack));
+    public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
+        player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getEmptySound(emptyResult(stack).getFirst()), SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     @Override
-    public ItemStack getItemResult(ItemStack usedItem, FluidStack usedFluid, Player player) {
+    public CauldronItemResult getItemResult(ItemStack usedItem, FluidStack usedFluid, Player player) {
         if (FluidContainerHelper.canItemBeEmptied(usedItem)) {
-            Pair<FluidStack, ItemStack> emptyingResult = FluidContainerHelper.emptyItem(usedItem, true);
-            return emptyingResult.getSecond();
+            return new TransmuteItemResult(emptyResult(usedItem).getSecond(), List.of());
         }
-        return usedItem;
+        return NoOpItemResult.INSTANCE;
     }
 
     @Override
-    public FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
+    public CauldronFluidResult getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
         if (FluidContainerHelper.canItemBeEmptied(usedItem)) {
-            Pair<FluidStack, ItemStack> emptyingResult = FluidContainerHelper.emptyItem(usedItem, true);
-            return emptyingResult.getFirst();
+            return new FillFluidResult(emptyResult(usedItem).getFirst());
         }
-        return FluidStack.EMPTY;
+        return NoOpFluidResult.INSTANCE;
     }
 
-    @Override
-    public int fluidAmountChange(ItemStack usedItem, FluidStack usedFluid) {
-        if (FluidContainerHelper.canItemBeEmptied(usedItem)) {
-            Pair<FluidStack, ItemStack> emptyingResult = FluidContainerHelper.emptyItem(usedItem, true);
-            return emptyingResult.getFirst().getAmount();
-        }
-        return fluidAmountChange();
-    }
-
-    @Override
-    public Ingredient getItemInput() {
-        return null;
-    }
-
-    @Override
-    public @Nullable CauldronFluidIngredient getFluidInput() {
-        return null;
-    }
-
-    @Override
-    public int fluidAmountChange() {
-        return 0;
+    private Pair<FluidStack, ItemStack> emptyResult(ItemStack stack) {
+        return FluidContainerHelper.emptyItem(stack, true);
     }
 }

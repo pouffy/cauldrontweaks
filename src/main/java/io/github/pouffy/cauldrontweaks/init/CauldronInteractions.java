@@ -16,8 +16,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class CauldronInteractions {
     public static final DeferredRegister<CauldronInteractionType<?>> HELPER = ModUtils.createRegister(CauldronRegistries.CAULDRON_INTERACTION_TYPE);
 
-    public static final DeferredHolder<CauldronInteractionType<?>, CauldronInteractionType<FillContainerInteraction>> FILL_CONTAINER = create("fill_container", FillContainerInteraction.CODEC);
-    public static final DeferredHolder<CauldronInteractionType<?>, CauldronInteractionType<EmptyContainerInteraction>> EMPTY_CONTAINER = create("empty_container", EmptyContainerInteraction.CODEC);
+    public static final DeferredHolder<CauldronInteractionType<?>, CauldronInteractionType<GeneralInteraction>> GENERAL = create("general", GeneralInteraction.CODEC);
+
     public static final DeferredHolder<CauldronInteractionType<?>, CauldronInteractionType<BucketEmptyInteraction>> EMPTY_BUCKET = create("empty_bucket", BucketEmptyInteraction.CODEC);
     public static final DeferredHolder<CauldronInteractionType<?>, CauldronInteractionType<BucketFillInteraction>> FILL_BUCKET = create("fill_bucket", BucketFillInteraction.CODEC);
     public static final DeferredHolder<CauldronInteractionType<?>, CauldronInteractionType<DyeFluidInteraction>> DYE_FLUID = create("dye_fluid", DyeFluidInteraction.CODEC);

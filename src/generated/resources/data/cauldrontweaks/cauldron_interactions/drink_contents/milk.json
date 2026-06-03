@@ -1,11 +1,30 @@
 {
   "type": "cauldrontweaks:drink_contents",
+  "conditions": [
+    {
+      "type": "cauldrontweaks:fluid_amount",
+      "amount": {
+        "type": "cauldrontweaks:above",
+        "bound": 100
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid",
+      "set": [
+        "minecraft:milk",
+        "minecraft:flowing_milk"
+      ]
+    },
+    {
+      "type": "cauldrontweaks:empty_hand"
+    }
+  ],
   "cure": {
     "cure": "milk"
   },
-  "fluid": {
-    "amount": 100,
-    "fluid": "minecraft:milk"
+  "result": {
+    "type": "cauldrontweaks:drain",
+    "amount": 100
   },
   "sound": "minecraft:entity.generic.drink"
 }

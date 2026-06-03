@@ -4,9 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
-import io.github.pouffy.cauldrontweaks.common.data.CauldronFluidIngredient;
+import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.ICauldronInteraction;
+import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
+import io.github.pouffy.cauldrontweaks.common.data.result.item.type.NoOpItemResult;
 import io.github.pouffy.cauldrontweaks.init.CauldronInteractions;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
@@ -16,20 +19,20 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
-public record DrinkContentsInteraction(CauldronFluidIngredient fluid, Holder<SoundEvent> eatSound, Optional<FoodProperties> foodProperties, Optional<CureProperties> cureProperties) implements ICauldronInteraction {
+public record DrinkContentsInteraction(List<CauldronCondition> conditions, CauldronFluidResult fluidResult, Holder<SoundEvent> eatSound, Optional<FoodProperties> foodProperties, Optional<CureProperties> cureProperties) implements ICauldronInteraction {
     public static final MapCodec<DrinkContentsInteraction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            CauldronFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(DrinkContentsInteraction::fluid),
+            CauldronCondition.CODEC.listOf().fieldOf("conditions").forGetter(DrinkContentsInteraction::conditions),
+            CauldronFluidResult.CODEC.fieldOf("result").forGetter(DrinkContentsInteraction::fluidResult),
             SoundEvent.CODEC.fieldOf("sound").forGetter(DrinkContentsInteraction::eatSound),
             FoodProperties.DIRECT_CODEC.optionalFieldOf("food").forGetter(DrinkContentsInteraction::foodProperties),
             CureProperties.CODEC.optionalFieldOf("cure").forGetter(DrinkContentsInteraction::cureProperties)
@@ -41,7 +44,12 @@ public record DrinkContentsInteraction(CauldronFluidIngredient fluid, Holder<Sou
     }
 
     @Override
-    public void runExtra(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
+    public boolean test(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
+        return CauldronCondition.test(this.conditions, cauldron, player, hand, stack);
+    }
+
+    @Override
+    public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         foodProperties.ifPresent(props -> {
             player.getFoodData().eat(props);
             addEatEffect(player, props);
@@ -51,39 +59,13 @@ public record DrinkContentsInteraction(CauldronFluidIngredient fluid, Holder<Sou
     }
 
     @Override
-    public boolean testExtra(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
-        boolean handTest;
-        if (hand == InteractionHand.OFF_HAND) {
-            handTest = player.isShiftKeyDown();
-        } else {
-            handTest = player.getItemInHand(hand).isEmpty();
-        }
-        return handTest;
+    public CauldronItemResult getItemResult(ItemStack usedItem, FluidStack usedFluid, Player player) {
+        return NoOpItemResult.INSTANCE;
     }
 
     @Override
-    public ItemStack getItemResult(ItemStack usedItem, FluidStack usedFluid, Player player) {
-        return usedItem;
-    }
-
-    @Override
-    public FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
-        return usedFluid;
-    }
-
-    @Override
-    public @Nullable Ingredient getItemInput() {
-        return null;
-    }
-
-    @Override
-    public @Nullable CauldronFluidIngredient getFluidInput() {
-        return this.fluid();
-    }
-
-    @Override
-    public int fluidAmountChange() {
-        return -this.fluid.amount();
+    public CauldronFluidResult getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
+        return this.fluidResult;
     }
 
     private void addEatEffect(Player player, FoodProperties properties) {

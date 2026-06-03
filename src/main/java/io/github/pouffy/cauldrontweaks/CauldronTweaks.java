@@ -39,10 +39,14 @@ public class CauldronTweaks {
         NeoForge.EVENT_BUS.register(new InteractionEvents());
         NeoForge.EVENT_BUS.addListener(TagsUpdatedEvent.class, (event) -> afterDataReloadOrDataSync(event.getRegistryAccess()));
 
+        CauldronLootParamSets.staticInit();
         CauldronBlockEntities.staticInit();
-        CauldronInteractions.staticInit();
         CauldronDataComponents.staticInit();
         CauldronFluids.staticInit();
+
+        CauldronIntTests.staticInit();
+        CauldronInteractions.staticInit();
+        CauldronConditions.staticInit();
         CauldronFluidResults.staticInit();
         CauldronItemResults.staticInit();
 

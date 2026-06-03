@@ -1,10 +1,22 @@
 {
   "type": "cauldrontweaks:clear_dye",
-  "fluid": {
-    "amount": 100,
-    "tag": "cauldrontweaks:clears_dye"
-  },
-  "input": {
-    "tag": "minecraft:dyeable"
+  "conditions": [
+    {
+      "type": "cauldrontweaks:item",
+      "ingredient": {
+        "tag": "minecraft:dyeable"
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid_amount",
+      "amount": {
+        "type": "cauldrontweaks:above",
+        "bound": 100
+      }
+    }
+  ],
+  "result": {
+    "type": "cauldrontweaks:drain",
+    "amount": 100
   }
 }

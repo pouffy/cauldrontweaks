@@ -30,7 +30,12 @@ public record InheritComponentsItemResult(List<Holder<DataComponentType<?>>> bla
 
     @Override
     public void alterPlayer(Player player, InteractionHand hand, ItemStack usedItem, FluidStack usedFluid) {
-
+        ItemStack result = getItemResult(usedItem, usedFluid);
+        if (!player.isCreative()) {
+            usedItem.shrink(1);
+            if (result.isEmpty()) return;
+            player.getInventory().placeItemBackInInventory(result);
+        }
     }
 
     @Override

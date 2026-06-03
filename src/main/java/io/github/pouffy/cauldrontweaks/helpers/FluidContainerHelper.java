@@ -1,7 +1,7 @@
 package io.github.pouffy.cauldrontweaks.helpers;
 
 import com.mojang.datafixers.util.Pair;
-import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -69,12 +69,10 @@ public class FluidContainerHelper {
         if (capability == null)
             return -1;
         if (capability instanceof FluidBucketWrapper) {
-            Item filledBucket = availableFluid.getFluid()
-                    .getBucket();
-            if (filledBucket == null || filledBucket == Items.AIR)
+            Item filledBucket = availableFluid.getFluid().getBucket();
+            if (filledBucket == Items.AIR)
                 return -1;
-            if (!((FluidBucketWrapper) capability).getFluid()
-                    .isEmpty())
+            if (!((FluidBucketWrapper) capability).getFluid().isEmpty())
                 return -1;
             return 1000;
         }
@@ -99,7 +97,7 @@ public class FluidContainerHelper {
     public static ItemStack fillItem(int requiredAmount, ItemStack stack, FluidStack availableFluid) {
         FluidStack toFill = availableFluid.copy();
         toFill.setAmount(requiredAmount);
-        toFill.remove(CauldronDataComponents.DYED_COLOR);
+        toFill.remove(DataComponents.DYED_COLOR);
         availableFluid.shrink(requiredAmount);
 
         if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {

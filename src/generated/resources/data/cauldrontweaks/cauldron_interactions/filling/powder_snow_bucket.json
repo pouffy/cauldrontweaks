@@ -1,14 +1,35 @@
 {
-  "type": "cauldrontweaks:fill_container",
-  "empty": {
-    "item": "minecraft:bucket"
+  "type": "cauldrontweaks:general",
+  "conditions": [
+    {
+      "type": "cauldrontweaks:item",
+      "ingredient": {
+        "item": "minecraft:bucket"
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid_amount",
+      "amount": {
+        "type": "cauldrontweaks:exact",
+        "value": 1000
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid",
+      "set": [
+        "cauldrontweaks:powder_snow",
+        "cauldrontweaks:flowing_powder_snow"
+      ]
+    }
+  ],
+  "fluid_result": {
+    "type": "cauldrontweaks:drain",
+    "amount": 1000
   },
-  "filled": {
-    "count": 1,
-    "id": "minecraft:powder_snow_bucket"
-  },
-  "fluid": {
-    "amount": 1000,
-    "fluid": "cauldrontweaks:powder_snow"
+  "result": {
+    "type": "cauldrontweaks:transmute",
+    "item": {
+      "id": "minecraft:powder_snow_bucket"
+    }
   }
 }

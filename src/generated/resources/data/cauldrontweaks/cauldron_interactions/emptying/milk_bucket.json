@@ -1,14 +1,31 @@
 {
-  "type": "cauldrontweaks:empty_container",
-  "empty": {
-    "count": 1,
-    "id": "minecraft:bucket"
+  "type": "cauldrontweaks:general",
+  "conditions": [
+    {
+      "type": "cauldrontweaks:item",
+      "ingredient": {
+        "item": "minecraft:milk_bucket"
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid_amount",
+      "amount": {
+        "type": "cauldrontweaks:exact",
+        "value": 0
+      }
+    }
+  ],
+  "fluid_result": {
+    "type": "cauldrontweaks:fill",
+    "fluid": {
+      "amount": 1000,
+      "id": "minecraft:milk"
+    }
   },
-  "filled": {
-    "item": "minecraft:milk_bucket"
-  },
-  "fluid": {
-    "amount": 1000,
-    "id": "minecraft:milk"
+  "result": {
+    "type": "cauldrontweaks:transmute",
+    "item": {
+      "id": "minecraft:bucket"
+    }
   }
 }

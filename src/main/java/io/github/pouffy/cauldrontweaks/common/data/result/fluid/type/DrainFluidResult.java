@@ -11,10 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-public record DrainFluidResult(int amount) implements CauldronFluidResult {
+import java.util.Optional;
+
+public record DrainFluidResult(int amount, Optional<CauldronFluidResult> other) implements CauldronFluidResult {
 
     public static final MapCodec<DrainFluidResult> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ExtraCodecs.POSITIVE_INT.fieldOf("amount").forGetter(DrainFluidResult::amount)
+            ExtraCodecs.POSITIVE_INT.fieldOf("amount").forGetter(DrainFluidResult::amount),
+            CauldronFluidResult.CODEC.optionalFieldOf("other").forGetter(DrainFluidResult::other)
     ).apply(instance, DrainFluidResult::new));
 
     @Override
@@ -25,6 +28,7 @@ public record DrainFluidResult(int amount) implements CauldronFluidResult {
     @Override
     public void alterTank(CauldronBlockEntity cauldron) {
         cauldron.getTank().drain(this.amount, IFluidHandler.FluidAction.EXECUTE);
+        other.ifPresent((r) -> r.alterTank(cauldron));
     }
 
     @Override

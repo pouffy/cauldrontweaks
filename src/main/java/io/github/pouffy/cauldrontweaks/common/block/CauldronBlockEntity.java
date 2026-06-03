@@ -1,19 +1,19 @@
 package io.github.pouffy.cauldrontweaks.common.block;
 
 import io.github.pouffy.cauldrontweaks.common.event.CauldronTickEvent;
-import io.github.pouffy.cauldrontweaks.common.fluid.DyedFluidColor;
 import io.github.pouffy.cauldrontweaks.helpers.CauldronHelper;
 import io.github.pouffy.cauldrontweaks.helpers.FluidHelper;
 import io.github.pouffy.cauldrontweaks.helpers.LerpedFloat;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.BlockEntityBehaviour;
 import io.github.pouffy.cauldrontweaks.helpers.blockentity.SmartBlockEntity;
 import io.github.pouffy.cauldrontweaks.init.CauldronBlockEntities;
-import io.github.pouffy.cauldrontweaks.init.CauldronDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
@@ -180,7 +180,7 @@ public class CauldronBlockEntity extends SmartBlockEntity {
         tag.put("CauldronContent", tank.writeToNBT(registries, new CompoundTag()));
         super.write(tag, registries, clientPacket);
 
-        DyedFluidColor cachedColor = getFluidStack().has(CauldronDataComponents.DYED_COLOR) ? getFluidStack().get(CauldronDataComponents.DYED_COLOR) : null;
+        DyedItemColor cachedColor = getFluidStack().has(DataComponents.DYED_COLOR) ? getFluidStack().get(DataComponents.DYED_COLOR) : null;
 
         if (!clientPacket) return;
 
