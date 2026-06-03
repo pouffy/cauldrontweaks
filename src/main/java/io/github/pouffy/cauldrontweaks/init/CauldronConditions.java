@@ -20,6 +20,7 @@ public class CauldronConditions {
     public static final DeferredHolder<CauldronConditionType<?>, CauldronConditionType<FluidCondition>> FLUID = create("fluid", FluidCondition.CODEC);
     public static final DeferredHolder<CauldronConditionType<?>, CauldronConditionType<FluidComponentsCondition>> FLUID_COMPONENTS = create("fluid_components", FluidComponentsCondition.CODEC);
     public static final DeferredHolder<CauldronConditionType<?>, CauldronConditionType<RejectFluidComponentsCondition>> REJECT_FLUID_COMPONENTS = create("reject_fluid_components", RejectFluidComponentsCondition.CODEC);
+    public static final DeferredHolder<CauldronConditionType<?>, CauldronConditionType<FluidDyeCondition>> FLUID_DYE = create("fluid_dye", FluidDyeCondition.CODEC);
     //Item
     public static final DeferredHolder<CauldronConditionType<?>, CauldronConditionType<ItemCondition>> ITEM = create("item", ItemCondition.CODEC);
     public static final DeferredHolder<CauldronConditionType<?>, CauldronConditionType<ItemComponentsCondition>> ITEM_COMPONENTS = create("item_components", ItemComponentsCondition.CODEC);

@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.helpers;
 
 import com.mojang.datafixers.util.Pair;
+import io.github.pouffy.cauldrontweaks.init.CauldronFluids;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -85,8 +86,8 @@ public class FluidContainerHelper {
         Fluid fluid = availableFluid.getFluid();
         if (fluid.isSame(Fluids.WATER))
             return true;
-        //if (fluid.isSame(AllFluids.POTION.get()))
-        //    return true;
+        if (fluid.isSame(CauldronFluids.POTION.get()))
+            return true;
         return false;
     }
 
@@ -101,7 +102,7 @@ public class FluidContainerHelper {
         availableFluid.shrink(requiredAmount);
 
         if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {
-            ItemStack fillBottle = ItemStack.EMPTY;
+            ItemStack fillBottle;
             Fluid fluid = toFill.getFluid();
             if (FluidHelper.isWater(fluid))
                 fillBottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);

@@ -2,10 +2,7 @@ package io.github.pouffy.cauldrontweaks.datagen.server;
 
 import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
-import io.github.pouffy.cauldrontweaks.common.data.condition.type.EmptyHandCondition;
-import io.github.pouffy.cauldrontweaks.common.data.condition.type.FluidAmountCondition;
-import io.github.pouffy.cauldrontweaks.common.data.condition.type.FluidCondition;
-import io.github.pouffy.cauldrontweaks.common.data.condition.type.ItemCondition;
+import io.github.pouffy.cauldrontweaks.common.data.condition.type.*;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CIOutput;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.types.*;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.types.builtin.BucketEmptyInteraction;
@@ -22,6 +19,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -29,8 +29,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -39,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,7 +56,7 @@ public class CauldronInteractionsProvider extends AbstractCauldronInteractionPro
     protected void addInteractions(CIOutput output, HolderLookup.Provider holderLookup) {
         builtin(output);
         buckets(output, holderLookup);
-        itemDyeing(output);
+        itemDyeing(output, holderLookup);
         contentsDrinking(output, holderLookup);
     }
 
@@ -63,7 +67,11 @@ public class CauldronInteractionsProvider extends AbstractCauldronInteractionPro
         this.save(output, new DrinkPotionInteraction(), CauldronTweaks.getResource("drink_potion"));
     }
 
-    private void itemDyeing(CIOutput output) {
+    private void itemDyeing(CIOutput output, HolderLookup.Provider holderLookup) {
+        for (DyeColor dyeColor : DyeColor.values()) {
+            Item banner = BannerBlock.byColor(dyeColor).asItem();
+            this.save(output, new GeneralInteraction(List.of(new ItemCondition(Ingredient.of(Items.WHITE_BANNER)), new FluidDyeCondition(dyeColor), new FluidAmountCondition(IntTest.above(100)), new FluidComponentsCondition(DataComponentPredicate.EMPTY, List.of(componentHolder(holderLookup, DataComponents.DYED_COLOR)))), new TransmuteItemResult(banner.getDefaultInstance(), List.of()), new DrainFluidResult(100, Optional.empty())), CauldronTweaks.getResource("dyeing/banner/"+dyeColor.getSerializedName()));
+        }
         this.save(output, new DyeItemInteraction(List.of(new ItemCondition(Ingredient.of(ItemTags.DYEABLE)), new FluidAmountCondition(IntTest.above(100))), new DrainFluidResult(100, Optional.empty()), Optional.empty()), CauldronTweaks.getResource("dyeing/dyeable"));
         this.save(output, new DyeClearingInteraction(List.of(new ItemCondition(Ingredient.of(ItemTags.DYEABLE)), new FluidAmountCondition(IntTest.above(100))), new DrainFluidResult(100, Optional.empty()), Optional.empty()), CauldronTweaks.getResource("undyeing/dyeable"));
     }
@@ -93,5 +101,11 @@ public class CauldronInteractionsProvider extends AbstractCauldronInteractionPro
             holders.add(getter.getOrThrow(key));
         }
         return new FluidCondition(HolderSet.direct(holders));
+    }
+
+    private static Holder<DataComponentType<?>> componentHolder(HolderLookup.Provider holderLookup, DataComponentType<?> componentType) {
+        HolderGetter<DataComponentType<?>> getter = holderLookup.asGetterLookup().lookupOrThrow(Registries.DATA_COMPONENT_TYPE);
+        ResourceKey<DataComponentType<?>> key = ResourceKey.create(Registries.DATA_COMPONENT_TYPE, Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(componentType)));
+        return getter.getOrThrow(key);
     }
 }

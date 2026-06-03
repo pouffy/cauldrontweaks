@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.result.fluid.type;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResultType;
@@ -28,6 +29,7 @@ public record DrainFluidResult(int amount, Optional<CauldronFluidResult> other) 
     @Override
     public void alterTank(CauldronBlockEntity cauldron) {
         cauldron.getTank().drain(this.amount, IFluidHandler.FluidAction.EXECUTE);
+        CauldronTweaks.LOGGER.info("Drained {} from cauldron", this.amount);
         other.ifPresent((r) -> r.alterTank(cauldron));
     }
 

@@ -1,0 +1,39 @@
+{
+  "type": "cauldrontweaks:general",
+  "conditions": [
+    {
+      "type": "cauldrontweaks:item",
+      "ingredient": {
+        "item": "minecraft:white_banner"
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid_dye",
+      "color": "orange"
+    },
+    {
+      "type": "cauldrontweaks:fluid_amount",
+      "amount": {
+        "type": "cauldrontweaks:above",
+        "bound": 100
+      }
+    },
+    {
+      "type": "cauldrontweaks:fluid_components",
+      "components": {},
+      "types": [
+        "minecraft:dyed_color"
+      ]
+    }
+  ],
+  "fluid_result": {
+    "type": "cauldrontweaks:drain",
+    "amount": 100
+  },
+  "result": {
+    "type": "cauldrontweaks:transmute",
+    "item": {
+      "id": "minecraft:orange_banner"
+    }
+  }
+}
