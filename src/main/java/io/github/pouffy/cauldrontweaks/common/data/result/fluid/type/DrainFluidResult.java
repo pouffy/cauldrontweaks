@@ -27,14 +27,16 @@ public record DrainFluidResult(int amount, Optional<CauldronFluidResult> other) 
     }
 
     @Override
-    public void alterTank(CauldronBlockEntity cauldron) {
-        cauldron.getTank().drain(this.amount, IFluidHandler.FluidAction.EXECUTE);
-        CauldronTweaks.LOGGER.info("Drained {} from cauldron", this.amount);
-        other.ifPresent((r) -> r.alterTank(cauldron));
+    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {
+        cauldron.getTank().drain(getFluidResult(usedItem, cauldron.getFluidStack()), IFluidHandler.FluidAction.EXECUTE);
+        CauldronTweaks.LOGGER.info("Drained {} from cauldron. Has {} remaining", this.amount, cauldron.getTank().getFluidAmount());
+        other.ifPresent((r) -> r.alterTank(cauldron, usedItem));
     }
 
     @Override
     public FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
-        return usedFluid;
+        FluidStack copy = usedFluid.copy();
+        copy.setAmount(this.amount);
+        return copy;
     }
 }

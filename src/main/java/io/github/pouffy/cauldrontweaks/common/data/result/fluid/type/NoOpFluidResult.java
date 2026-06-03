@@ -19,7 +19,7 @@ public enum NoOpFluidResult implements CauldronFluidResult {
     }
 
     @Override
-    public void alterTank(CauldronBlockEntity cauldron) {}
+    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {}
 
     @Override
     public FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid) {

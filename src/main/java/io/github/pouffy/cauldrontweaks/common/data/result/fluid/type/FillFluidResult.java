@@ -22,8 +22,8 @@ public record FillFluidResult(FluidStack fluid) implements CauldronFluidResult {
     }
 
     @Override
-    public void alterTank(CauldronBlockEntity cauldron) {
-        cauldron.getTank().fill(this.fluid, IFluidHandler.FluidAction.EXECUTE);
+    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {
+        cauldron.getTank().fill(getFluidResult(usedItem, cauldron.getFluidStack()), IFluidHandler.FluidAction.EXECUTE);
     }
 
     @Override

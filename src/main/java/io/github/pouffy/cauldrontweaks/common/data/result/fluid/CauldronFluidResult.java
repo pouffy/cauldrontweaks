@@ -15,7 +15,7 @@ public interface CauldronFluidResult {
 
     CauldronFluidResultType<?> getType();
 
-    void alterTank(CauldronBlockEntity cauldron);
+    void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem);
 
     FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid);
 

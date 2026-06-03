@@ -22,7 +22,7 @@ public interface ICauldronInteraction {
 
     default ItemInteractionResult interact(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         if (test(cauldron, fluidStack, player, hand, stack)) {
-            this.getFluidResult(stack, cauldron.getFluidStack()).alterTank(cauldron);
+            this.getFluidResult(stack, cauldron.getFluidStack()).alterTank(cauldron, stack);
             this.getItemResult(stack, cauldron.getFluidStack(), player).alterPlayer(player, hand, stack, cauldron.getFluidStack());
             run(cauldron, fluidStack, player, hand, stack);
             return ItemInteractionResult.sidedSuccess(player.level().isClientSide());

@@ -26,10 +26,8 @@ public record RemoveComponentsFluidResult(List<Holder<DataComponentType<?>>> com
     }
 
     @Override
-    public void alterTank(CauldronBlockEntity cauldron) {
-        FluidStack copy = cauldron.getFluidStack().copy();
-        this.components.stream().map(Holder::value).forEach(copy::remove);
-        cauldron.getTank().setFluid(copy);
+    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {
+        cauldron.getTank().setFluid(getFluidResult(usedItem, cauldron.getFluidStack()));
     }
 
     @Override

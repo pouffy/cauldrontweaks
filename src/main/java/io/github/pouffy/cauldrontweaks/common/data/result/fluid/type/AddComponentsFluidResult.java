@@ -22,10 +22,8 @@ public record AddComponentsFluidResult(DataComponentPatch components) implements
     }
 
     @Override
-    public void alterTank(CauldronBlockEntity cauldron) {
-        FluidStack copy = cauldron.getFluidStack().copy();
-        copy.applyComponents(this.components);
-        cauldron.getTank().setFluid(copy);
+    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {
+        cauldron.getTank().setFluid(getFluidResult(usedItem, cauldron.getFluidStack()));
     }
 
     @Override
