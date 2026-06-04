@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.result.item.type;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResultType;
 import io.github.pouffy.cauldrontweaks.init.CauldronItemResults;
@@ -35,6 +36,7 @@ public record InheritComponentsItemResult(List<Holder<DataComponentType<?>>> bla
             usedItem.shrink(1);
             if (result.isEmpty()) return;
             player.getInventory().placeItemBackInInventory(result);
+            CauldronTweaks.LOGGER.info("Inherited components: {} to {} from {}", getComponentsPatch(usedFluid), result, usedFluid);
         }
     }
 

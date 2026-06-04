@@ -3,6 +3,7 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction.types;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
@@ -69,14 +70,16 @@ public record DrinkContentsInteraction(List<CauldronCondition> conditions, Cauld
     }
 
     private void addEatEffect(Player player, FoodProperties properties) {
+        int effects = 0;
         if (!player.level().isClientSide()) {
             for(FoodProperties.PossibleEffect foodproperties$possibleeffect : properties.effects()) {
                 if (player.level().random.nextFloat() < foodproperties$possibleeffect.probability()) {
                     player.addEffect(foodproperties$possibleeffect.effect());
+                    effects++;
                 }
             }
         }
-
+        CauldronTweaks.LOGGER.info("Added {} food effects", effects);
     }
 
     public record CureProperties(EffectCure cure, int amount, float chance) {
@@ -97,18 +100,20 @@ public record DrinkContentsInteraction(List<CauldronCondition> conditions, Cauld
                     compatibleEffects.add(effect.getEffect());
                 }
             }
-
+            int effects = 0;
             if (!compatibleEffects.isEmpty()) {
                 for (int i = 0; i <= amount; i++) {
                     MobEffectInstance selectedEffect = consumer.getEffect(compatibleEffects.get(level.random.nextInt(compatibleEffects.size())));
                     if (level.random.nextFloat() < this.chance()) {
                         if (selectedEffect != null && !EventHooks.onEffectRemoved(consumer, selectedEffect, this.cure())) {
                             consumer.removeEffect(selectedEffect.getEffect());
+                            compatibleEffects.remove(selectedEffect);
+                            effects++;
                         }
-                        compatibleEffects.remove(selectedEffect);
                     }
                 }
             }
+            CauldronTweaks.LOGGER.info("Cleared {} effects through cure: {}", effects, this.cure.name());
         }
     }
 }

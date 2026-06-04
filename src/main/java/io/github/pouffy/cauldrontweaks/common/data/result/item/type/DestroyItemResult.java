@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.result.item.type;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResultType;
 import io.github.pouffy.cauldrontweaks.init.CauldronItemResults;
@@ -27,11 +28,14 @@ public record DestroyItemResult(int damageAmount, float chance) implements Cauld
 
     @Override
     public void alterPlayer(Player player, InteractionHand hand, ItemStack usedItem, FluidStack usedFluid) {
+        ItemStack copy = usedItem.copy();
         if (!player.isCreative() && player.level().random.nextFloat() < chance) {
             if (usedItem.has(DataComponents.MAX_DAMAGE) && damageAmount > 0) {
                 usedItem.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+                CauldronTweaks.LOGGER.info("Damaged Item {} by {}", copy, this.damageAmount);
             } else {
                 usedItem.shrink(1);
+                CauldronTweaks.LOGGER.info("Destroyed Item {}", copy);
             }
         }
     }

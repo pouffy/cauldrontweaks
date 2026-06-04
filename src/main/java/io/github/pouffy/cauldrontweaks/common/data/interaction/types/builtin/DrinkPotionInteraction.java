@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.common.data.interaction.types.builtin;
 
 import com.mojang.serialization.MapCodec;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.CauldronFluidIngredient;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
@@ -49,6 +50,7 @@ public class DrinkPotionInteraction implements ICauldronInteraction {
             PotionContents potionContents = fluidStack.get(DataComponents.POTION_CONTENTS);
             affectConsumer(potionContents, player);
             player.playSound(SoundEvents.GENERIC_DRINK, 1.0F, 1.0F);
+            CauldronTweaks.LOGGER.info("Drank Potion {}", potionContents);
         }
     }
 

@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.result.item.type;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.type.RemoveComponentsFluidResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResultType;
@@ -31,6 +32,7 @@ public record RemoveComponentsItemResult(List<Holder<DataComponentType<?>>> comp
     public void alterPlayer(Player player, InteractionHand hand, ItemStack usedItem, FluidStack usedFluid) {
         List<? extends DataComponentType<?>> toRemove = this.components.stream().map(Holder::value).toList();
         toRemove.forEach(usedItem::remove);
+        CauldronTweaks.LOGGER.info("Removed {} components from {}", toRemove.size(), usedItem);
     }
 
     @Override

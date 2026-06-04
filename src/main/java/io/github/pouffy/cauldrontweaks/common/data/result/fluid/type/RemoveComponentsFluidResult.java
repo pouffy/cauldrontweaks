@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.result.fluid.type;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResultType;
@@ -28,6 +29,7 @@ public record RemoveComponentsFluidResult(List<Holder<DataComponentType<?>>> com
     @Override
     public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {
         cauldron.getTank().setFluid(getFluidResult(usedItem, cauldron.getFluidStack()));
+        CauldronTweaks.LOGGER.info("Removed {} components from fluid from cauldron. Has {} remaining", this.components.size(), cauldron.getTank().getFluidAmount());
     }
 
     @Override

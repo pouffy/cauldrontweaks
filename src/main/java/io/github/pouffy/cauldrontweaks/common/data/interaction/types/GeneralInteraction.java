@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction.types;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
@@ -36,7 +37,7 @@ public record GeneralInteraction(List<CauldronCondition> conditions, CauldronIte
 
     @Override
     public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
-
+        CauldronTweaks.LOGGER.info("General Interaction, No-Op");
     }
 
     @Override

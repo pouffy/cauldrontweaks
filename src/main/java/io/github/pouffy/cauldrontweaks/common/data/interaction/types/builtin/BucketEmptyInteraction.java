@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction.types.builtin;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.condition.type.builtin.CanBeEmptiedCondition;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
@@ -43,6 +44,7 @@ public class BucketEmptyInteraction implements ICauldronInteraction {
     @Override
     public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getEmptySound(emptyResult(stack).getFirst()), SoundSource.BLOCKS, 1.0F, 1.0F);
+        CauldronTweaks.LOGGER.info("Played sound for bucket emptying");
     }
 
     @Override

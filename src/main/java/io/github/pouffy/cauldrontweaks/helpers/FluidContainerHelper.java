@@ -82,7 +82,7 @@ public class FluidContainerHelper {
         return filled == 0 ? -1 : filled;
     }
 
-    private static boolean canFillGlassBottleInternally(FluidStack availableFluid) {
+    public static boolean canFillGlassBottleInternally(FluidStack availableFluid) {
         Fluid fluid = availableFluid.getFluid();
         if (fluid.isSame(Fluids.WATER))
             return true;

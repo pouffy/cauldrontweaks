@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.common.data.interaction;
 
 import com.mojang.serialization.Codec;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
@@ -22,9 +23,14 @@ public interface ICauldronInteraction {
 
     default ItemInteractionResult interact(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         if (test(cauldron, fluidStack, player, hand, stack)) {
+            CauldronTweaks.LOGGER.info("All Conditions met, running results...");
+            CauldronTweaks.LOGGER.info("Running Fluid Result");
             this.getFluidResult(stack, cauldron.getFluidStack()).alterTank(cauldron, stack);
+            CauldronTweaks.LOGGER.info("Fluid Result Run... Running Item Result");
             this.getItemResult(stack, cauldron.getFluidStack(), player).alterPlayer(player, hand, stack, cauldron.getFluidStack());
+            CauldronTweaks.LOGGER.info("Item Result Run... Running Extra Logic");
             run(cauldron, fluidStack, player, hand, stack);
+            CauldronTweaks.LOGGER.info("Extra Logic Run... Interaction Success");
             return ItemInteractionResult.sidedSuccess(player.level().isClientSide());
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

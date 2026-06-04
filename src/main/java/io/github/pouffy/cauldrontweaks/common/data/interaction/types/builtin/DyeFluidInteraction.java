@@ -39,6 +39,7 @@ public class DyeFluidInteraction implements ICauldronInteraction {
     @Override
     public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getFillSound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
+        CauldronTweaks.LOGGER.info("Played fluid dyeing sound");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.common.data.interaction.types.builtin;
 
 import com.mojang.serialization.MapCodec;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.condition.type.builtin.CanBeFilledCondition;
 import io.github.pouffy.cauldrontweaks.common.data.interaction.CauldronInteractionType;
@@ -43,12 +44,13 @@ public class BucketFillInteraction implements ICauldronInteraction {
     @Override
     public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getFillSound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
+        CauldronTweaks.LOGGER.info("Played sound for bucket filling");
     }
 
     @Override
     public CauldronItemResult getItemResult(ItemStack usedItem, FluidStack usedFluid, Player player) {
         if (FluidContainerHelper.canItemBeFilled(usedItem)) {
-            return new TransmuteItemResult(fillResult(usedItem, usedFluid), List.of());
+            return new TransmuteItemResult(fillResult(usedItem, usedFluid.copy()), List.of());
         }
         return NoOpItemResult.INSTANCE;
     }

@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.interaction.types;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.condition.CauldronCondition;
 import io.github.pouffy.cauldrontweaks.common.data.condition.type.FluidComponentsCondition;
@@ -48,6 +49,7 @@ public record DyeItemInteraction(List<CauldronCondition> conditions, CauldronFlu
     @Override
     public void run(CauldronBlockEntity cauldron, FluidStack fluidStack, Player player, InteractionHand hand, ItemStack stack) {
         player.level().playSound(player, cauldron.getBlockPos(), FluidHelper.getEmptySound(fluidStack), SoundSource.BLOCKS, 1.0F, 1.0F);
+        CauldronTweaks.LOGGER.info("Played item dyeing sound");
     }
 
     @Override

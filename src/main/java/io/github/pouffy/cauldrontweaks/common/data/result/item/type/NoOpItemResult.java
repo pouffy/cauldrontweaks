@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.common.data.result.item.type;
 
 import com.mojang.serialization.MapCodec;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResultType;
 import io.github.pouffy.cauldrontweaks.init.CauldronItemResults;
@@ -20,7 +21,9 @@ public enum NoOpItemResult implements CauldronItemResult {
     }
 
     @Override
-    public void alterPlayer(Player player, InteractionHand hand, ItemStack usedItem, FluidStack usedFluid) {}
+    public void alterPlayer(Player player, InteractionHand hand, ItemStack usedItem, FluidStack usedFluid) {
+        CauldronTweaks.LOGGER.info("No-Op");
+    }
 
     @Override
     public ItemStack getItemResult(ItemStack usedItem, FluidStack usedFluid) {

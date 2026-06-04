@@ -2,6 +2,7 @@ package io.github.pouffy.cauldrontweaks.common.data.result.item.type;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.item.CauldronItemResultType;
 import io.github.pouffy.cauldrontweaks.init.CauldronItemResults;
@@ -32,11 +33,13 @@ public record TransmuteItemResult(ItemStack newStack, List<Holder<DataComponentT
 
     @Override
     public void alterPlayer(Player player, InteractionHand hand, ItemStack usedItem, FluidStack usedFluid) {
+        ItemStack copy = usedItem.copy();
         ItemStack result = getItemResult(usedItem, usedFluid);
         if (!player.isCreative()) {
             usedItem.shrink(1);
             if (result.isEmpty()) return;
             player.getInventory().placeItemBackInInventory(result);
+            CauldronTweaks.LOGGER.info("Transmuted {} into {}", copy, result);
         }
     }
 

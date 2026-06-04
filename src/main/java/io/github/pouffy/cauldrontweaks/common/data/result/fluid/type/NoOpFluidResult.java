@@ -1,6 +1,7 @@
 package io.github.pouffy.cauldrontweaks.common.data.result.fluid.type;
 
 import com.mojang.serialization.MapCodec;
+import io.github.pouffy.cauldrontweaks.CauldronTweaks;
 import io.github.pouffy.cauldrontweaks.common.block.CauldronBlockEntity;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResult;
 import io.github.pouffy.cauldrontweaks.common.data.result.fluid.CauldronFluidResultType;
@@ -19,7 +20,9 @@ public enum NoOpFluidResult implements CauldronFluidResult {
     }
 
     @Override
-    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {}
+    public void alterTank(CauldronBlockEntity cauldron, ItemStack usedItem) {
+        CauldronTweaks.LOGGER.info("No-Op");
+    }
 
     @Override
     public FluidStack getFluidResult(ItemStack usedItem, FluidStack usedFluid) {
